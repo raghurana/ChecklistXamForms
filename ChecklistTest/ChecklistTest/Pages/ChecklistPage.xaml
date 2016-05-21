@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:markupx="clr-namespace:ChecklistTest.MarkupExtensions;assembly=ChecklistTest"
-             xmlns:customViews="clr-namespace:ChecklistTest.Views;assembly=ChecklistTest"
+             xmlns:customCells="clr-namespace:ChecklistTest.Cells;assembly=ChecklistTest"
              xmlns:converters="clr-namespace:ChecklistTest.ValueConverters;assembly=ChecklistTest"
              x:Class="ChecklistTest.Pages.ChecklistPage"
              x:Name="MyChecklistPage">
@@ -11,7 +11,7 @@
     <ResourceDictionary>
 
       <Style TargetType="BoxView">
-        <Setter Property="HeightRequest" Value="2" />
+        <Setter Property="HeightRequest" Value="1" />
         <Setter Property="Color" Value="Gray" />
       </Style>
 
@@ -19,8 +19,8 @@
 
       <!-- Template for boolean checklists -->
       <DataTemplate x:Key="BooleanTemplate">
-        <ViewCell>
-          <StackLayout >
+        <customCells:CustomViewCell>
+          <StackLayout>
             <StackLayout Orientation="Horizontal">
               <Image Source="icon.png" />
               <Label Text="{Binding LabelText}" VerticalOptions="Center" />
@@ -31,19 +31,26 @@
                    Placeholder="Comment..." />
             <BoxView />
           </StackLayout>
-        </ViewCell>
+        </customCells:CustomViewCell>
       </DataTemplate>
 
       <!-- Template for non - boolean checklists -->
       <DataTemplate x:Key="NonBooleanTemplate">
-        <ViewCell>
-          <StackLayout Spacing="0">
+        <customCells:CustomViewCell>
+          <StackLayout Spacing="0" >
+            
             <!-- Header Text -->
-            <Label Text="{Binding LabelText}"
-                   BackgroundColor="Yellow"
-                   TextColor="Black"
+            <Label x:Name="HeaderTextLabel"
+                   Text="{Binding LabelText}"
                    FontAttributes="Bold"
-                   FontSize="Large"/>
+                   FontSize="Large">
+              <Label.Triggers>
+                <DataTrigger TargetType="Label" Binding="{Binding IsMandatory}" Value="True">
+                  <Setter Property="BackgroundColor" Value="Yellow" />
+                  <Setter Property="TextColor" Value="Black" />
+                </DataTrigger>
+              </Label.Triggers>
+            </Label>
 
             <BoxView />
 
@@ -57,33 +64,38 @@
               </Label.GestureRecognizers>
             </Label>
 
-            <!-- DateTime Label -->
-            <DatePicker IsVisible="{Binding IsDateTime}" />
+            <!-- DatePicker -->
+            <DatePicker IsVisible="{Binding IsDate}" />
+
+            <!-- TimePicker -->
+            <TimePicker IsVisible="{Binding IsTime}" />
             
             <!-- Text Label -->
             <Entry IsVisible="{Binding IsTextual}"
-                   Text="{Binding DataValue, Converter={StaticResource NullToDefaultPlaceholderConverter}}" />
-            
+                   Placeholder="{Binding DataValue, Converter={StaticResource NullToDefaultPlaceholderConverter}}"
+                   Text="{Binding DataValue, Mode=TwoWay}" />
+
             <!-- Numeric Label -->
             <Entry IsVisible="{Binding IsNumeric}"
                    Keyboard="Numeric"
-                   Text="{Binding DataValue, Converter={StaticResource NullToDefaultPlaceholderConverter}}" />
-            
+                   Placeholder="{Binding DataValue, Converter={StaticResource NullToDefaultPlaceholderConverter}}"
+                   Text="{Binding DataValue, Mode=TwoWay}" />
+
             <!-- Comment Entry -->
             <Entry Text="{Binding CommentValue, Mode=TwoWay}"
                    IsVisible="{Binding HasComment}"
                    Placeholder="Comment..." />
-
+              
             <BoxView />
 
           </StackLayout>
-        </ViewCell>
+        </customCells:CustomViewCell>
       </DataTemplate>
 
     </ResourceDictionary>
   </ContentPage.Resources>
 
-  <customViews:ChecklistItemsListView
+  <ListView
     SeparatorVisibility="None"
     HasUnevenRows="true"
     ItemsSource="{Binding CheckListItems}"
@@ -95,6 +107,6 @@
         Command="{Binding Path=BindingContext.CompleteCommand, Source={x:Reference MyChecklistPage}}" />
     </ListView.Footer>
 
-  </customViews:ChecklistItemsListView>
+  </ListView>
 
 </ContentPage>

@@ -29,13 +29,19 @@ namespace ChecklistTest.Data
 
         public bool IsBoolean  => IsOfType(Codes.Boolean);
 
-        public bool IsDateTime => IsOfType(Codes.Date) || IsOfType(Codes.Time);
+        public bool IsDate => IsOfType(Codes.Date);
+
+        public bool IsTime => IsOfType(Codes.Time);
 
         public bool IsLookup   => IsOfType(Codes.Lookup);
 
         public bool IsTextual  => IsOfType(Codes.Comment) || IsOfType(Codes.Text);
 
         public bool IsNumeric  => IsOfType(Codes.Numeric1) || IsOfType(Codes.Numeric2);
+
+        public bool IsMandatory =>
+            !string.IsNullOrEmpty(MandatoryDataFlag) &&
+            MandatoryDataFlag.Equals(Codes.True, StringComparison.CurrentCulture);
 
         public bool HasComment => 
             !string.IsNullOrEmpty(CommentFlag) && 

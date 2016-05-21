@@ -22,7 +22,8 @@ namespace ChecklistTest.Data
             yield return new InspectionChecklistItem
             {
                 LabelText = "This is Lookup",
-                DataTypeCode = InspectionChecklistItem.Codes.Lookup
+                DataTypeCode = InspectionChecklistItem.Codes.Lookup,
+                MandatoryDataFlag = InspectionChecklistItem.Codes.True
             };
 
             yield return new InspectionChecklistItem
@@ -34,21 +35,28 @@ namespace ChecklistTest.Data
 
             yield return new InspectionChecklistItem
             {
-                LabelText = "This is DateTime",
+                LabelText = "This is Date field",
                 DataTypeCode = InspectionChecklistItem.Codes.Date,
             };
 
             yield return new InspectionChecklistItem
             {
-                LabelText = "This is DateTime With Comments",
+                LabelText = "This is Date field With Comments",
                 DataTypeCode = InspectionChecklistItem.Codes.Date,
                 CommentFlag = InspectionChecklistItem.Codes.True
             };
 
             yield return new InspectionChecklistItem
             {
+                LabelText = "This is Time field",
+                DataTypeCode = InspectionChecklistItem.Codes.Time,
+            };
+
+            yield return new InspectionChecklistItem
+            {
                 LabelText = "This is Text",
-                DataTypeCode = InspectionChecklistItem.Codes.Text
+                DataTypeCode = InspectionChecklistItem.Codes.Text,
+                MandatoryDataFlag = InspectionChecklistItem.Codes.True
             };
 
             yield return new InspectionChecklistItem
