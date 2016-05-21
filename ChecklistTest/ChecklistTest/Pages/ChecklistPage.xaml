@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:markupx="clr-namespace:ChecklistTest.MarkupExtensions;assembly=ChecklistTest"
+             xmlns:customViews="clr-namespace:ChecklistTest.Views;assembly=ChecklistTest"
+             xmlns:converters="clr-namespace:ChecklistTest.ValueConverters;assembly=ChecklistTest"
+             x:Class="ChecklistTest.Pages.ChecklistPage"
+             x:Name="MyChecklistPage">
+
+  <ContentPage.Resources>
+    <ResourceDictionary>
+
+      <Style TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="2" />
+        <Setter Property="Color" Value="Gray" />
+      </Style>
+
+      <converters:NullToDefaultPlaceholderConverter x:Key="NullToDefaultPlaceholderConverter" />
+
+      <!-- Template for boolean checklists -->
+      <DataTemplate x:Key="BooleanTemplate">
+        <ViewCell>
+          <StackLayout >
+            <StackLayout Orientation="Horizontal">
+              <Image Source="icon.png" />
+              <Label Text="{Binding LabelText}" VerticalOptions="Center" />
+            </StackLayout>
+            <!-- Comment Entry -->
+            <Entry Text="{Binding CommentValue, Mode=TwoWay}"
+                   IsVisible="{Binding HasComment}"
+                   Placeholder="Comment..." />
+            <BoxView />
+          </StackLayout>
+        </ViewCell>
+      </DataTemplate>
+
+      <!-- Template for non - boolean checklists -->
+      <DataTemplate x:Key="NonBooleanTemplate">
+        <ViewCell>
+          <StackLayout Spacing="0">
+            <!-- Header Text -->
+            <Label Text="{Binding LabelText}"
+                   BackgroundColor="Yellow"
+                   TextColor="Black"
+                   FontAttributes="Bold"
+                   FontSize="Large"/>
+
+            <BoxView />
+
+            <!-- Look Up Label -->
+            <Label IsVisible="{Binding IsLookup}"
+                   Text="{Binding DataValue, Converter={StaticResource NullToDefaultPlaceholderConverter}}" >
+              <Label.GestureRecognizers>
+                <TapGestureRecognizer
+                  Command="{Binding LookupItemTapped, Source={x:Reference MyChecklistPage}}"
+                  CommandParameter="{Binding .}" />
+              </Label.GestureRecognizers>
+            </Label>
+
+            <!-- DateTime Label -->
+            <DatePicker IsVisible="{Binding IsDateTime}" />
+            
+            <!-- Text Label -->
+            <Entry IsVisible="{Binding IsTextual}"
+                   Text="{Binding DataValue, Converter={StaticResource NullToDefaultPlaceholderConverter}}" />
+            
+            <!-- Numeric Label -->
+            <Entry IsVisible="{Binding IsNumeric}"
+                   Keyboard="Numeric"
+                   Text="{Binding DataValue, Converter={StaticResource NullToDefaultPlaceholderConverter}}" />
+            
+            <!-- Comment Entry -->
+            <Entry Text="{Binding CommentValue, Mode=TwoWay}"
+                   IsVisible="{Binding HasComment}"
+                   Placeholder="Comment..." />
+
+            <BoxView />
+
+          </StackLayout>
+        </ViewCell>
+      </DataTemplate>
+
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <customViews:ChecklistItemsListView
+    SeparatorVisibility="None"
+    HasUnevenRows="true"
+    ItemsSource="{Binding CheckListItems}"
+    ItemTemplate="{markupx:ChecklistTemplateSelector Page={x:Reference MyChecklistPage}}">
+
+    <ListView.Footer>
+      <Button 
+        Text="Complete Inspection"
+        Command="{Binding Path=BindingContext.CompleteCommand, Source={x:Reference MyChecklistPage}}" />
+    </ListView.Footer>
+
+  </customViews:ChecklistItemsListView>
+
+</ContentPage>
