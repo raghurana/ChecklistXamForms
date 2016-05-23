@@ -4,6 +4,7 @@
              xmlns:markupx="clr-namespace:ChecklistTest.MarkupExtensions;assembly=ChecklistTest"
              xmlns:customCells="clr-namespace:ChecklistTest.Cells;assembly=ChecklistTest"
              xmlns:converters="clr-namespace:ChecklistTest.ValueConverters;assembly=ChecklistTest"
+             xmlns:views="clr-namespace:ChecklistTest.Views;assembly=ChecklistTest"
              x:Class="ChecklistTest.Pages.ChecklistPage"
              x:Name="MyChecklistPage">
 
@@ -19,7 +20,7 @@
 
       <!-- Template for boolean checklists -->
       <DataTemplate x:Key="BooleanTemplate">
-        <customCells:CustomViewCell>
+        <ViewCell>
           <StackLayout>
             <StackLayout Orientation="Horizontal">
               <Image Source="icon.png" />
@@ -31,12 +32,12 @@
                    Placeholder="Comment..." />
             <BoxView />
           </StackLayout>
-        </customCells:CustomViewCell>
-      </DataTemplate>
+        </ViewCell>
+    </DataTemplate>
 
       <!-- Template for non - boolean checklists -->
       <DataTemplate x:Key="NonBooleanTemplate">
-        <customCells:CustomViewCell>
+        <ViewCell>
           <StackLayout Spacing="0" >
             
             <!-- Header Text -->
@@ -89,24 +90,24 @@
             <BoxView />
 
           </StackLayout>
-        </customCells:CustomViewCell>
+        </ViewCell>
       </DataTemplate>
 
     </ResourceDictionary>
   </ContentPage.Resources>
 
-  <ListView
+  <views:CustomListView
     SeparatorVisibility="None"
     HasUnevenRows="true"
     ItemsSource="{Binding CheckListItems}"
     ItemTemplate="{markupx:ChecklistTemplateSelector Page={x:Reference MyChecklistPage}}">
 
-    <ListView.Footer>
+    <views:CustomListView.Footer>
       <Button 
         Text="Complete Inspection"
         Command="{Binding Path=BindingContext.CompleteCommand, Source={x:Reference MyChecklistPage}}" />
-    </ListView.Footer>
+    </views:CustomListView.Footer>
 
-  </ListView>
+  </views:CustomListView>
 
 </ContentPage>
